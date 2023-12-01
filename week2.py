@@ -42,14 +42,60 @@ class CountSort:
             i -= 1
 
         return self.sorted_array
+    
+def hoare_partition(A, p, r):
+    x = A[p]
+    i = p - 1
+    j = r + 1
+    while True:
+        # Decrement j until we find a value less than x
+        while True:
+            j -= 1
+            if A[j] <= x:
+                break
+        
+        # Increment i until we find a value greater than x
+        while True:
+            i += 1
+            if A[i] >= x:
+                break
+        
+        # If pointers have crossed, return the index j
+        if i < j:
+            A[i], A[j] = A[j], A[i]  # Swap the values
+        else:
+            return j
+
+def quicksort(arr):
+    if len(arr) == 1 or len(arr) == 0:
+        return arr
+    else:
+        pivot = arr[0]
+        i = 0
+        for j in range(len(arr) - 1):
+            if arr[j + 1] < pivot:
+                arr[j + 1], arr[i + 1] = arr[i + 1], arr[j + 1]
+                i += 1
+        arr[0], arr[i] = arr[i], arr[0]
+        first_part = quicksort(arr[:i])
+        second_part = quicksort(arr[i + 1:])
+        first_part.append(arr[i])
+        return first_part + second_part
+
 
 # Example usage:
-# Assuming the max value in the array is the actual maximum value present in the input array
+# count sort
 input_array = [1, 4, 1, 2, 7, 5, 2, 9, 5, 3, 5, 4]
 max_val = max(input_array)  # Find the maximum value in the array for the count array size
 sorter = CountSort(input_array, max_val)
 sorted_array = sorter.sort()
 
-print(sorted_array)
+print("Sorted array:", sorted_array)
 
-
+# Example usage:
+# hoare partition
+A = [13, 19, 9, 5, 12, 8, 7, 4, 11, 2, 6, 21]
+index = hoare_partition(A, 0, len(A) - 1)
+print("Partitioned index:", index)
+print("Partitioned array:", A)
+print("Quick sort result:", quicksort(A))
